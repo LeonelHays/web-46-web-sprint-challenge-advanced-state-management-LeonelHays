@@ -1,8 +1,71 @@
+import { FETCH_START, FETCH_SUCCESS, FETCH_FAIL, ADD_MEMBER, FAIL_MESSAGE } from "../actions";
+
 
 export const initialState = {
+    smurfs:[{
+        name:'Poppa Smurf',
+        position: 'Village Leader',
+        nickname:'Pops',
+        description: 'Papa is the practical village leader and the father figure of 100 or so young Smurfs. He is easily identified by his red Smurf hat, pants, and a shortly-trimmed white beard and moustache.'
+    }],
+    isLoading:false,
+    error:'',
+    failMessage:''
 }
 
-const reducer = ()=>{
+const reducer = (state = initialState, action) =>{
+    switch (action.type) {
+        case(FETCH_START):
+           return({
+               ...state,
+               smurfs:[],
+               isLoading: true,
+               error:'',
+               failMessage:''
+           });
+        case(FETCH_SUCCESS):
+           return({
+               ...state,
+               smurfs: [action.payload],
+               isLoading: false,
+               error:'',
+               failMessage:''
+           })
+        case(FETCH_FAIL):
+           return({
+               ...state,
+               smurfs: [],
+               isLoading: false,
+               error: action.payload,
+               failMessage: ''
+           })
+        case(ADD_MEMBER): {
+          const newSmurf = {
+          name: action.payload.name,
+          position: action.payload.position,
+          nickname: action.payload.nickname,
+          description:action.payload.description,
+          id: Date.now() + Math.random()
+        }
+           return({
+               ...state,
+               smurfs: [...state.smurfs, newSmurf],
+               isLoading: false,
+               error:'',
+               failMessage:''
+           })
+        }
+        case(FAIL_MESSAGE):
+        return({
+            ...state,
+               smurfs: [],
+               isLoading: false,
+               error: '',
+               failMessage: action.payload
+        })
+        default:
+            return state;
+    }
 }
 
 //**************DO NOT EDIT ANY CODE BEYOND THIS POINT**************//
